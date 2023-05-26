@@ -1,0 +1,15 @@
+{
+    "name": "Lica helper",
+    "version": "0.01",
+    "description": "a small extension to help customer support representatives to work with emails at Softum",
+    "permissions": ["activeTab"],
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["production.js"],
+            "css": ["production.css"],
+            "run_at": "document_end"
+        }
+    ],
+    "manifest_version": 2
+}
