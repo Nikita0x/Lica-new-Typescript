@@ -42,13 +42,19 @@ p, h1, h2, h3, h4, h5, h6 {
   --text-color: #dddddd;
   
 }
-
+/* #app {
+  height: 1000vh;
+} */
 /* ====================================================== */
-.container {
-  position: relative;
+.lica-wrapper {
+  position: sticky;
+  top: 5%;
   background-color: var(--background-color);
-  height: 720px;
-  width: 320px;
+  width: 380px;
+  padding:0 10px;
+  /* ============================= */
+  /* for production - -10%*/
+  transform: translateX(0);   
 }
 
 /* Header */
@@ -67,25 +73,56 @@ p, h1, h2, h3, h4, h5, h6 {
 .header__buttons {
   display: flex;
 }
-.btn {
+
+/* body */
+.lica-body {
+  display: grid;
+  height: 70%;
+  min-height: 200px;
+  max-height: 400px;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(auto-fill, 70px);
+  gap: 4px;
+  overflow-y: scroll;
+  padding: 5px 0;
+}
+
+.lica-btn {
+  display: flex;
+  align-items: center;
+  position: relative;
+  height: 70px;
   cursor: pointer;
-  border: none;
+  background-color: chartreuse;
   border: 1px solid #2d2d2d;
   border-radius: 5px;
+}
+.lica-btn__title {
+  padding-left: 5px;
+}
+.lica-btn__edit {
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  right: 13%;
+  background: url('./images/edit-pencil-line-02-svgrepo-com.svg');
+  background-position: center;
+  background-size: cover;
+}
+.lica-btn__delete{
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  right: 2%;
+  background: url('./images/delete-2-svgrepo-com.svg');
+  background-position: center;
+  background-size: cover;
 }
 .spam {
   background-color: var(--accent-color);
 }
 
 
-
-
-
-.body{
-  position: relative;
-  height: 70%;
-  background-color: var(--background-color);
-}
 
 
 .footer {
