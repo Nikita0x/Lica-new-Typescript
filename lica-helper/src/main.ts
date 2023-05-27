@@ -138,8 +138,64 @@ function createButton(parentToAppendTo:HTMLElement) {
     newButtonTitle.innerText = 'New Language'
     const newButtonEdit = document.createElement('button')
     newButtonEdit.classList.add('lica-btn__edit')
-    newButtonEdit.innerText = 'E'
+    const newButtonDelete = document.createElement('button')
+    newButtonDelete.classList.add('lica-btn__delete')
+
     newButton.appendChild(newButtonTitle)
     newButton.appendChild(newButtonEdit)
+    newButton.appendChild(newButtonDelete)
+
+    newButtonDelete.addEventListener('click', () => {
+        const newButtonAccept = document.createElement('button')
+        newButtonAccept.classList.add('lica-btn__accept')
+        newButtonEdit.replaceWith(newButtonAccept)
+
+        const newButtonCancel = document.createElement('button')
+        newButtonCancel.classList.add('lica-btn__cancel')
+        newButtonDelete.replaceWith(newButtonCancel)
+
+        newButtonCancel.addEventListener('click', () => {
+            newButtonAccept.replaceWith(newButtonEdit)
+            newButtonCancel.replaceWith(newButtonDelete)
+        })
+        
+        newButtonAccept.addEventListener('click', () => {
+            newButton.remove();
+        })
+    })
+
+    newButtonEdit.addEventListener('click', (e) => {
+        const newButtonAccept = document.createElement('button')
+        newButtonAccept.classList.add('lica-btn__accept')
+        newButtonEdit.replaceWith(newButtonAccept)
+
+        const newButtonCancel = document.createElement('button')
+        newButtonCancel.classList.add('lica-btn__cancel')
+        newButtonDelete.replaceWith(newButtonCancel)
+
+        newButtonCancel.addEventListener('click', () => {
+            newButtonAccept.replaceWith(newButtonEdit)
+            newButtonCancel.replaceWith(newButtonDelete)
+            newBtnTitleInput.replaceWith(newButtonTitle)
+        })
+        
+        const newBtnTitleInput = document.createElement('input')
+        newBtnTitleInput.classList.add('lica-btn__input')
+        newButtonTitle.replaceWith(newBtnTitleInput)
+
+        newButtonAccept.addEventListener('click', () => {
+            const inputValue = newBtnTitleInput.value;
+            newButtonTitle.innerText = inputValue;
+            newBtnTitleInput.remove();
+            newButtonAccept.replaceWith(newButtonTitle)
+            newButton.appendChild(newButtonAccept)
+            newButtonAccept.replaceWith(newButtonEdit)
+            newButtonCancel.replaceWith(newButtonDelete)
+
+        })
+    })
+
+    
+
     parentToAppendTo.appendChild(newButton)
 }
