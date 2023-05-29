@@ -124,6 +124,17 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 // }, 2500);
 // =======================================================================
 
+interface Button {
+    title: string,
+    id: number,
+}
+
+// global variables
+let buttonsArray: Button[] = JSON.parse(localStorage.getItem('langs') || '[]')
+ 
+console.log(buttonsArray)
+// ======================
+
 const licaBody = document.querySelector('.lica-body') as HTMLElement;
 const addNewLanguageBtn = document.querySelector('.buttons__new_language');
 addNewLanguageBtn?.addEventListener('click', () => {
@@ -131,6 +142,8 @@ addNewLanguageBtn?.addEventListener('click', () => {
 })
 
 function createButton(parentToAppendTo:HTMLElement) {
+
+
     const newButton = document.createElement('div')
     newButton.classList.add('lica-btn')
     const newButtonTitle = document.createElement('p')
@@ -140,6 +153,15 @@ function createButton(parentToAppendTo:HTMLElement) {
     newButtonEdit.classList.add('lica-btn__edit')
     const newButtonDelete = document.createElement('button')
     newButtonDelete.classList.add('lica-btn__delete')
+    //==============================
+
+    const btnObj = {
+        id: Date.now(),
+        title: newButtonTitle.innerText
+    }
+
+    buttonsArray.push(btnObj)
+    localStorage.setItem('langs', JSON.stringify(buttonsArray))
 
     newButton.appendChild(newButtonTitle)
     newButton.appendChild(newButtonEdit)
@@ -160,6 +182,8 @@ function createButton(parentToAppendTo:HTMLElement) {
         })
         
         newButtonAccept.addEventListener('click', () => {
+
+
             newButton.remove();
         })
     })
@@ -186,6 +210,13 @@ function createButton(parentToAppendTo:HTMLElement) {
         newButtonAccept.addEventListener('click', () => {
             const inputValue = newBtnTitleInput.value;
             newButtonTitle.innerText = inputValue;
+            buttonsArray.forEach(item => {
+                if(item.id === btnObj.id) {
+                    btnObj.title = inputValue;
+                    localStorage.setItem('langs', JSON.stringify(buttonsArray))
+                    console.log(buttonsArray)
+                }
+            })
             newBtnTitleInput.remove();
             newButtonAccept.replaceWith(newButtonTitle)
             newButton.appendChild(newButtonAccept)
@@ -195,7 +226,13 @@ function createButton(parentToAppendTo:HTMLElement) {
         })
     })
 
-    
+
 
     parentToAppendTo.appendChild(newButton)
 }
+
+// function saveToLocalStorage(objectToBeSaved: object) {
+//     const objJSON = JSON.stringify(objectToBeSaved)
+//     localStorage.setItem('langs', objJSON)
+
+// }
