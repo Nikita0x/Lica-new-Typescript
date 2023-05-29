@@ -132,7 +132,7 @@ interface Button {
 // global variables
 let buttonsArray: Button[] = JSON.parse(localStorage.getItem('langs') || '[]')
  
-console.log(buttonsArray)
+console.log(`buttonsArray:`, buttonsArray)
 // ======================
 
 const licaBody = document.querySelector('.lica-body') as HTMLElement;
@@ -149,11 +149,12 @@ function createButton(parentToAppendTo:HTMLElement) {
     const newButtonTitle = document.createElement('p')
     newButtonTitle.classList.add('lica-btn__title')
     newButtonTitle.innerText = 'New Language'
+    newButton.id = (Date.now()).toString();
     const newButtonEdit = document.createElement('button')
     newButtonEdit.classList.add('lica-btn__edit')
     const newButtonDelete = document.createElement('button')
     newButtonDelete.classList.add('lica-btn__delete')
-    //==============================
+    //============================== local storage
 
     const btnObj = {
         id: Date.now(),
@@ -162,7 +163,7 @@ function createButton(parentToAppendTo:HTMLElement) {
 
     buttonsArray.push(btnObj)
     localStorage.setItem('langs', JSON.stringify(buttonsArray))
-
+    // ================================
     newButton.appendChild(newButtonTitle)
     newButton.appendChild(newButtonEdit)
     newButton.appendChild(newButtonDelete)
@@ -182,9 +183,16 @@ function createButton(parentToAppendTo:HTMLElement) {
         })
         
         newButtonAccept.addEventListener('click', () => {
-
-
-            newButton.remove();
+                buttonsArray.forEach((item, index) => {
+                    const stringID = (item.id).toString()
+                    if(stringID === newButton.id) {
+                        const element = document.getElementById(stringID)
+                        element?.remove()
+                    }
+                    buttonsArray.splice(index, 1)
+                })
+                localStorage.setItem("langs",JSON.stringify(buttonsArray))
+                console.log(buttonsArray)
         })
     })
 
@@ -226,13 +234,99 @@ function createButton(parentToAppendTo:HTMLElement) {
         })
     })
 
-
-
     parentToAppendTo.appendChild(newButton)
 }
 
-// function saveToLocalStorage(objectToBeSaved: object) {
-//     const objJSON = JSON.stringify(objectToBeSaved)
-//     localStorage.setItem('langs', objJSON)
 
-// }
+function renderLangButtons() {
+    buttonsArray.forEach(item => {
+        const btnObj = {
+            id: item.id,
+            title: item.title,
+        }
+        const newButton = document.createElement('div')
+        newButton.classList.add('lica-btn')
+        const newButtonTitle = document.createElement('p')
+        newButtonTitle.classList.add('lica-btn__title')
+        newButtonTitle.innerText = item.title;
+        newButton.id = (item.id).toString();
+        const newButtonEdit = document.createElement('button')
+        newButtonEdit.classList.add('lica-btn__edit')
+        const newButtonDelete = document.createElement('button')
+        newButtonDelete.classList.add('lica-btn__delete')
+
+        newButton.appendChild(newButtonTitle)
+        newButton.appendChild(newButtonEdit)
+        newButton.appendChild(newButtonDelete)
+
+        licaBody.appendChild(newButton)
+
+        newButtonDelete.addEventListener('click', () => {
+            const newButtonAccept = document.createElement('button')
+            newButtonAccept.classList.add('lica-btn__accept')
+            newButtonEdit.replaceWith(newButtonAccept)
+    
+            const newButtonCancel = document.createElement('button')
+            newButtonCancel.classList.add('lica-btn__cancel')
+            newButtonDelete.replaceWith(newButtonCancel)
+    
+            newButtonCancel.addEventListener('click', () => {
+                newButtonAccept.replaceWith(newButtonEdit)
+                newButtonCancel.replaceWith(newButtonDelete)
+            })
+            
+            newButtonAccept.addEventListener('click', () => {
+                    buttonsArray.forEach((item, index) => {
+                        const stringID = (item.id).toString()
+                        if(stringID === newButton.id) {
+                            const element = document.getElementById(stringID)
+                            element?.remove()
+                        }
+                        buttonsArray.splice(index, 1)
+                    })
+                    localStorage.setItem("langs",JSON.stringify(buttonsArray))
+                    console.log(buttonsArray)
+            })
+        })
+
+        newButtonEdit.addEventListener('click', (e) => {
+            const newButtonAccept = document.createElement('button')
+            newButtonAccept.classList.add('lica-btn__accept')
+            newButtonEdit.replaceWith(newButtonAccept)
+    
+            const newButtonCancel = document.createElement('button')
+            newButtonCancel.classList.add('lica-btn__cancel')
+            newButtonDelete.replaceWith(newButtonCancel)
+    
+            newButtonCancel.addEventListener('click', () => {
+                newButtonAccept.replaceWith(newButtonEdit)
+                newButtonCancel.replaceWith(newButtonDelete)
+                newBtnTitleInput.replaceWith(newButtonTitle)
+            })
+            
+            const newBtnTitleInput = document.createElement('input')
+            newBtnTitleInput.classList.add('lica-btn__input')
+            newButtonTitle.replaceWith(newBtnTitleInput)
+    
+            newButtonAccept.addEventListener('click', () => {
+                const inputValue = newBtnTitleInput.value;
+                newButtonTitle.innerText = inputValue;
+                buttonsArray.forEach(item => {
+                    if(item.id === btnObj.id) {
+                        item.title = inputValue;
+                        localStorage.setItem('langs', JSON.stringify(buttonsArray))
+                        console.log(buttonsArray)
+                    }
+                })
+                newBtnTitleInput.remove();
+                newButtonAccept.replaceWith(newButtonTitle)
+                newButton.appendChild(newButtonAccept)
+                newButtonAccept.replaceWith(newButtonEdit)
+                newButtonCancel.replaceWith(newButtonDelete)
+    
+            })
+        })
+    })
+}
+
+renderLangButtons()
