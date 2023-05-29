@@ -57,6 +57,7 @@ p, h1, h2, h3, h4, h5, h6 {
   transform: translateX(0);   
 }
 
+
 /* Header */
 .header{
   position: relative;
@@ -156,13 +157,53 @@ p, h1, h2, h3, h4, h5, h6 {
 outline: 2px solid #715fde;
 }
 
+/*======================== modal- categories */
+.categories {
+  position: absolute;
+  top: 0;
+  left:0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background-color: #2d2d2d;
+  display: none;
+}
+.categories__header {
+  position: relative;
+  top: 0;
+  height: 20%;
+  background-color: rgb(64, 67, 144);
+}
+.categories__title {
+  text-align: center;
+  font-weight: 100;
+  color: var(--text-color);
+}
+.categories__buttons {
+  display: flex;
 
-
-.spam {
-  background-color: var(--accent-color);
 }
 
-
+.categories__body {
+  display: grid;
+  height: 70%;
+  min-height: 200px;
+  max-height: 400px;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(auto-fill, 70px);
+  gap: 4px;
+  overflow-y: scroll;
+  padding: 5px 0;
+}
+.categories__footer {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  bottom: 0;
+  height: 10%;
+  color: var(--text-color);
+  background-color: rgb(64, 67, 144);
+}
 
 
 .footer {
