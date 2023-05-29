@@ -275,17 +275,21 @@ function renderLangButtons() {
                 newButtonCancel.replaceWith(newButtonDelete)
             })
             
-            newButtonAccept.addEventListener('click', () => {
-                    buttonsArray.forEach((item, index) => {
-                        const stringID = (item.id).toString()
-                        if(stringID === newButton.id) {
-                            const element = document.getElementById(stringID)
-                            element?.remove()
-                        }
-                        buttonsArray.splice(index, 1)
-                    })
-                    localStorage.setItem("langs",JSON.stringify(buttonsArray))
-                    console.log(buttonsArray)
+            newButtonAccept.addEventListener('click', (e: MouseEvent) => {
+                const parentElement = (e.target as HTMLElement).parentElement;
+                const targetId = parentElement!.id;
+
+                if(parentElement) {
+                    parentElement.remove();
+                }
+                buttonsArray.forEach((item, index) => {
+                    if(item.id === parseInt(targetId))
+                    buttonsArray.splice(index, 1);
+                })
+                console.log(buttonsArray)
+                localStorage.setItem("langs",JSON.stringify(buttonsArray))
+
+
             })
         })
 
