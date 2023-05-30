@@ -400,13 +400,13 @@ function openModal(title: string, buttonID: number) {
     categoriesTitle.innerText = title;
 
 
-    categories.dataset.id = title.toString();
+    // categories.dataset.id = buttonID.toString();
     categoriesBackBtn.addEventListener('click', (e:MouseEvent) => {
         addNewCatBtn.removeEventListener('click', addNewCategory)
         const element = e.target as HTMLElement;
         element.parentNode?.parentNode?.parentElement?.parentElement?.remove()
     })
-
+    console.log(categories.dataset.id)
 
 
 
