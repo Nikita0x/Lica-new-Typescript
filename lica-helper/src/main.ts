@@ -32,31 +32,6 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
             <button class="lica-btn__delete"></button>
         </div>
 
-
-
-<!-- modal-categories -->
-        <div class="categories">
-            <nav class="categories__header">
-                <h2 class="categories__title">Choose the language</h2>
-                <div class="categories__buttons">
-                    <button class="categories__back"><< Back</button>
-                    <button class="categories__new_category">Add new category</button>
-                    <button class="buttons__spam">SPAM</button>
-                </div>
-                <input type="text" placeholder="Search...">
-            </nav>
-            <div class="categories__body"></div>
-            <footer class="categories__footer">
-                <div class="categories__footer-button">
-                    <h1 class="categories__footer-title">Empty template</h1>
-                    <button class="categories__footer-seetings">Settings</button>
-                </div>
-            </footer>
-        </div>
-
-
-
-
     </section>
 
 
@@ -159,8 +134,6 @@ console.log(`buttonsArray:`, buttonsArray)
 
 const licaBody = document.querySelector('.lica-body') as HTMLElement;
 const addNewLanguageBtn = document.querySelector('.buttons__new_language');
-const categories = document.querySelector('.categories') as HTMLElement;
-const categoriesBackBtn = document.querySelector('.categories__back') as HTMLElement;
 addNewLanguageBtn?.addEventListener('click', () => {
     createButton(licaBody)
 })
@@ -395,17 +368,43 @@ renderLangButtons()
 
 // open modal function
 function openModal(title: string, buttonID: number) {
-    categories.style.display = 'block';  
+    const categories = document.createElement('div')
+    categories.classList.add('categories')
+    categories.innerHTML = `
+    <!-- modal-categories -->
+        <div class="categories">
+            <nav class="categories__header">
+                <h2 class="categories__title"></h2>
+                <div class="categories__buttons">
+                    <button class="categories__back"><< Back</button>
+                    <button class="categories__new_category">Add new category</button>
+                    <button class="buttons__spam">SPAM</button>
+                </div>
+                <input type="text" placeholder="Search...">
+            </nav>
+            <div class="categories__body"></div>
+            <footer class="categories__footer">
+                <div class="categories__footer-button">
+                    <h1 class="categories__footer-title">Empty template</h1>
+                    <button class="categories__footer-seetings">Settings</button>
+                </div>
+            </footer>
+        </div>
+
+    `
+    licaBody.appendChild(categories)
     // variables
+    const categoriesBackBtn = document.querySelector('.categories__back') as HTMLElement;
     const addNewCatBtn = document.querySelector('.categories__new_category') as HTMLElement;
     const categoriesTitle = document.querySelector('.categories__title') as HTMLElement;
     categoriesTitle.innerText = title;
 
 
     categories.dataset.id = title.toString();
-    categoriesBackBtn.addEventListener('click', () => {
+    categoriesBackBtn.addEventListener('click', (e:MouseEvent) => {
         addNewCatBtn.removeEventListener('click', addNewCategory)
-        categories.style.display = 'none';
+        const element = e.target as HTMLElement;
+        element.parentNode?.parentNode?.parentElement?.parentElement?.remove()
     })
 
 
