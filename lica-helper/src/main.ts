@@ -123,7 +123,18 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 interface Button {
     title: string,
     id: number,
-    categories: any[];
+    categories: Categories[];
+}
+
+interface Categories {
+    title: string,
+    id: number,
+    templates: Templates[];
+}
+interface Templates {
+    title: string,
+    id: number,
+    text: ``;
 }
 
 // global variables
@@ -259,6 +270,9 @@ function createButton(parentToAppendTo:HTMLElement, btnObj: Button) {
 }
 
 
+
+
+
 function renderLangButtons() {
     buttonsArray.forEach(item => {
         const btnObj = {
@@ -274,7 +288,11 @@ renderLangButtons()
 
 // open modal function
 function openModal(title: string, buttonID: number) {
+ 
+
+    console.log(buttonsArray)
     const categories = document.createElement('div')
+    categories.id = buttonID.toString()
     categories.classList.add('categories')
     categories.innerHTML = `
     <!-- modal-categories -->
@@ -303,7 +321,9 @@ function openModal(title: string, buttonID: number) {
     const categoriesBackBtn = document.querySelector('.categories__back') as HTMLElement;
     const addNewCatBtn = document.querySelector('.categories__new_category') as HTMLElement;
     const categoriesTitle = document.querySelector('.categories__title') as HTMLElement;
+    const categoriesBody = document.querySelector('.categories__body') as HTMLElement;
     categoriesTitle.innerText = title;
+    
 
 
     // categories.dataset.id = buttonID.toString();
@@ -312,9 +332,27 @@ function openModal(title: string, buttonID: number) {
         const element = e.target as HTMLElement;
         element.parentNode?.parentNode?.parentElement?.parentElement?.remove()
     })
-    console.log(categories.dataset.id)
+    
+    // render buttons
+    buttonsArray.forEach(item => {
+        item.categories.forEach(category => {
+            const categoryObj = {
+                id: category.id,
+                languageID: buttonID,
+                title:category.title,
+                templates: category.templates,
+                categories: []
+            }
+            // console.log(categoryObj)
+            // debugger
+            if (item.id === (categoryObj.languageID)) {
+                console.log('hii')
+                createButton(categoriesBody, categoryObj)
+            }
+        })
+    })
 
-
+    
 
 
     addNewCatBtn.addEventListener('click', addNewCategory)
