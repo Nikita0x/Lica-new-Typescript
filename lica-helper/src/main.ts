@@ -140,6 +140,12 @@ interface BtnObject {
     title: string,
     categories: [],
 }
+interface CategoryObj {
+    id: string,
+    title: string,
+    templates: [],
+}
+
 // Add new language - listener
 addNewLanguageBtn.addEventListener('click', () => {
     const btnObject: BtnObject = {
@@ -168,7 +174,11 @@ function createButton(btnObject: BtnObject, parent:HTMLElement) {
 
     createEditBtn(newButton, btnObject)
     createDeleteBtn(newButton, btnObject)
-    
+
+        //Level 2
+        newButton.addEventListener('click', () => {
+            categoriesModal(btnObject)
+        })
 }
 
 function createEditBtn(parent:HTMLElement, btnObject:BtnObject) {
@@ -192,7 +202,6 @@ function editButtonsChange(btnObject:BtnObject) {
     editBtnChange(btnEdit)
     function editBtnChange(parent: HTMLElement) {
         // change edit btn to accept btn, delete btn to cancel btn
-        debugger
         const acceptBtn = document.createElement('button')
         acceptBtn.classList.add('lica-btn__accept')
         parent.replaceWith(acceptBtn)
@@ -291,3 +300,69 @@ function createDeleteBtn(parent:HTMLElement,btnObject:BtnObject) {
         })
     }
 }
+
+function categoriesModal(btnObject:BtnObject) {
+    const categories = document.createElement('div')
+    categories.classList.add('categories')
+    categories.innerHTML = `
+    <!-- modal-categories -->
+        <div class="categories">
+            <nav class="categories__header">
+                <h2 class="categories__title"></h2>
+                <div class="categories__buttons">
+                    <button class="categories__back"><< Back</button>
+                    <button class="categories__new_category">Add new category</button>
+                    <button class="buttons__spam">SPAM</button>
+                </div>
+                <input type="text" placeholder="Search...">
+            </nav>
+            <div class="categories__body"></div>
+            <footer class="categories__footer">
+                <div class="categories__footer-button">
+                    <h1 class="categories__footer-title">Empty template</h1>
+                    <button class="categories__footer-seetings">Settings</button>
+                </div>
+            </footer>
+        </div>
+
+    `
+    licaBody.appendChild(categories)
+
+    const categoriesBackBtn = document.querySelector('.categories__back') as HTMLElement;
+    const addNewCatBtn = document.querySelector('.categories__new_category') as HTMLElement;
+    const categoriesTitle = document.querySelector('.categories__title') as HTMLElement;
+    categoriesTitle.innerText = btnObject.title;
+    const categoriesBody = document.querySelector('.categories__body') as HTMLElement;
+
+    // back btn
+    categoriesBackBtn.addEventListener('click', () => {
+        categories.remove();
+    })
+
+    // add new category buttons
+    addNewCatBtn.addEventListener('click', () => {
+        const categoryObj: CategoryObj = {
+            id: (Date.now()).toString(),
+            title: 'New Language',
+            templates: [],
+        }
+        addNewCategory(btnObject, categoryObj, categoriesBody)
+
+    })
+    function addNewCategory(btnObject:BtnObject, categoryObj:CategoryObj, parent:HTMLElement) {
+        // create main button
+        const newButton = document.createElement('div')
+        parent.appendChild(newButton)
+        const newButtonTitle = document.createElement('p')
+        newButtonTitle.classList.add('lica-btn__title')
+        newButtonTitle.innerText = btnObject.title;
+        newButton.appendChild(newButtonTitle)
+        newButton.id = btnObject.id;
+        newButton.classList.add('lica-btn')
+
+        createEditBtn(newButton, btnObject)
+        createDeleteBtn(newButton, btnObject)
+
+    }
+}
+
