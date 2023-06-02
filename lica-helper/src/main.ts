@@ -142,12 +142,12 @@ interface BtnObject {
 }
 // Add new language - listener
 addNewLanguageBtn.addEventListener('click', () => {
-
     const btnObject: BtnObject = {
         id: (Date.now()).toString(),
         title: 'New Language',
         categories: [],
     }
+
     buttonsArray.push(btnObject)
     console.log(buttonsArray)
     localStorage.setItem('langs', JSON.stringify(buttonsArray))
@@ -169,8 +169,6 @@ function createButton(btnObject: BtnObject, parent:HTMLElement) {
     createEditBtn(newButton, btnObject)
     createDeleteBtn(newButton, btnObject)
     
-    newButton.addEventListener('click', categoriesModal)
-
 }
 
 function createEditBtn(parent:HTMLElement, btnObject:BtnObject) {
@@ -194,6 +192,7 @@ function editButtonsChange(btnObject:BtnObject) {
     editBtnChange(btnEdit)
     function editBtnChange(parent: HTMLElement) {
         // change edit btn to accept btn, delete btn to cancel btn
+        debugger
         const acceptBtn = document.createElement('button')
         acceptBtn.classList.add('lica-btn__accept')
         parent.replaceWith(acceptBtn)
@@ -232,6 +231,10 @@ function editButtonsChange(btnObject:BtnObject) {
                 }
 
                 cancelBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                })
+
+                input.addEventListener('click', (e) => {
                     e.stopPropagation();
                 })
         }
@@ -287,9 +290,4 @@ function createDeleteBtn(parent:HTMLElement,btnObject:BtnObject) {
             })
         })
     }
-}
-
-// level 2 - categories modal
-function categoriesModal(btnObject: BtnObject) {
-    console.log('hello')
 }
