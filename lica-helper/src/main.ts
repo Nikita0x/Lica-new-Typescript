@@ -120,358 +120,176 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 // }, 2500);
 // =======================================================================
 
-interface Button {
-    title: string,
-    id: number,
-    categories: Categories[];
-}
 
-interface Categories {
-    title: string,
-    id: number,
-    templates: Templates[];
-}
-interface Templates {
-    title: string,
-    id: number,
-    text: ``;
-}
 
 // global variables
-let buttonsArray: Button[] = JSON.parse(localStorage.getItem('langs') || '[]')
+let buttonsArray = JSON.parse(localStorage.getItem('langs') || '[]')
  
 console.log(`buttonsArray:`, buttonsArray)
 // ======================
 
 const licaBody = document.querySelector('.lica-body') as HTMLElement;
-const addNewLanguageBtn = document.querySelector('.buttons__new_language');
-addNewLanguageBtn?.addEventListener('click', () => {
-    const btnObj = {
-        id: Date.now(),
-        title: 'New button',
+const addNewLanguageBtn = document.querySelector('.buttons__new_language') as  HTMLElement;
+const spamBtn = document.querySelector('.buttons__spam') as HTMLElement;
+
+
+
+
+interface BtnObject {
+    id: string,
+    title: string,
+    categories: [],
+}
+// Add new language - listener
+addNewLanguageBtn.addEventListener('click', () => {
+
+    const btnObject: BtnObject = {
+        id: (Date.now()).toString(),
+        title: 'New Language',
         categories: [],
     }
-    buttonsArray.push(btnObj)
-    createButton(licaBody, btnObj)
+    buttonsArray.push(btnObject)
+    console.log(buttonsArray)
     localStorage.setItem('langs', JSON.stringify(buttonsArray))
-})
+    createButton(btnObject,licaBody)
 
-function createButton(parentToAppendTo:HTMLElement, btnObj: Button) {
+})
+// 1 level.
+function createButton(btnObject: BtnObject, parent:HTMLElement) {
+    // create main button
     const newButton = document.createElement('div')
-    newButton.classList.add('lica-btn')
+    parent.appendChild(newButton)
     const newButtonTitle = document.createElement('p')
     newButtonTitle.classList.add('lica-btn__title')
-    newButtonTitle.innerText = btnObj.title;
-    newButton.id = btnObj.id.toString();
-    const newButtonEdit = document.createElement('button')
-    newButtonEdit.classList.add('lica-btn__edit')
-    const newButtonDelete = document.createElement('button')
-    newButtonDelete.classList.add('lica-btn__delete')
-
+    newButtonTitle.innerText = btnObject.title;
     newButton.appendChild(newButtonTitle)
-    newButton.appendChild(newButtonEdit)
-    newButton.appendChild(newButtonDelete)
+    newButton.id = btnObject.id;
+    newButton.classList.add('lica-btn')
 
-    function newButtonDeleteLogic(parentToAppendTo:HTMLElement) {
-        newButtonDelete.addEventListener('click', (e: MouseEvent) => {
-            e.stopPropagation();
-            const newButtonAccept = document.createElement('button')
-            newButtonAccept.classList.add('lica-btn__accept')
-            newButtonEdit.replaceWith(newButtonAccept)
+    createEditBtn(newButton, btnObject)
+    createDeleteBtn(newButton, btnObject)
     
-            const newButtonCancel = document.createElement('button')
-            newButtonCancel.classList.add('lica-btn__cancel')
-            newButtonDelete.replaceWith(newButtonCancel)
+    newButton.addEventListener('click', categoriesModal)
+
+}
+
+function createEditBtn(parent:HTMLElement, btnObject:BtnObject) {
+    const btnEdit = document.createElement('button')
+    btnEdit.classList.add('lica-btn__edit')
+    parent.appendChild(btnEdit);
+
+    // btnEdit listener
+    btnEdit.addEventListener('click', (e) => {
+        e.stopPropagation()
+        editButtonsChange(btnObject)
+    })
+}
+function editButtonsChange(btnObject:BtnObject) {
+    const parent = document.getElementById(btnObject.id)
+    const btnTitle = parent?.querySelector('.lica-btn__title') as HTMLElement
+    const btnEdit = parent?.querySelector('.lica-btn__edit') as HTMLElement
+    const btnDelete = parent?.querySelector('.lica-btn__delete') as HTMLElement
     
-            newButtonCancel.addEventListener('click', (e: MouseEvent) => {
-                e.stopPropagation()
-                newButtonAccept.replaceWith(newButtonEdit)
-                newButtonCancel.replaceWith(newButtonDelete)
-            })
-            
-            newButtonAccept.addEventListener('click', (e: MouseEvent) => {
-                e.stopPropagation()
-                const parentElement = (e.target as HTMLElement).parentElement;
-                const targetId = parentElement!.id;
     
-                if(parentElement) {
-                    parentElement.remove();
+    editBtnChange(btnEdit)
+    function editBtnChange(parent: HTMLElement) {
+        // change edit btn to accept btn, delete btn to cancel btn
+        const acceptBtn = document.createElement('button')
+        acceptBtn.classList.add('lica-btn__accept')
+        parent.replaceWith(acceptBtn)
+
+        replaceTitleWithInput(parent, btnObject)
+        function replaceTitleWithInput(parent: HTMLElement, btnObject:BtnObject) {
+            // replace title with input
+            const input = document.createElement('input')
+            const cancelBtn = document.createElement('button')
+            cancelBtn.classList.add('lica-btn__cancel')
+            parent.appendChild(input)
+            input.classList.add('lica-btn__input')
+            btnTitle.replaceWith(input)
+
+                changeTitle(parent,btnObject)
+                function changeTitle(parent: HTMLElement, btnObject:BtnObject) {
+                    // change title of the button based on input
+                    acceptBtn.addEventListener('click', () => {
+                        btnObject.title = input.value;
+                        btnTitle.innerText = input.value;
+                        localStorage.setItem('langs', JSON.stringify(buttonsArray))
+                        input.replaceWith(btnTitle)
+                        acceptBtn.replaceWith(btnEdit)
+                        cancelBtn.replaceWith(btnDelete)
+
+                    })
                 }
-                buttonsArray.forEach((item, index) => {
-                    if(item.id === parseInt(targetId))
-                    buttonsArray.splice(index, 1);
+                cancelBtnChange(parent,btnObject)
+                function cancelBtnChange(parent:HTMLElement, btnObject:BtnObject) {
+                    btnDelete.replaceWith(cancelBtn)
+                    cancelBtn.addEventListener('click', () => {
+                        cancelBtn.replaceWith(btnDelete)
+                        input.replaceWith(btnTitle)
+                        acceptBtn.replaceWith(btnEdit)
+                    })
+                }
+
+                cancelBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
                 })
-                console.log(buttonsArray)
-                localStorage.setItem("langs",JSON.stringify(buttonsArray))
-            })
+        }
+
+        acceptBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
         })
+        
     }
-    newButtonDeleteLogic(newButton)
-    
-    function newButtonEditLogic(parentToAppendTo:HTMLElement) {
-        newButtonEdit.addEventListener('click', (e) => {
+
+    editBtnDelete(btnDelete)
+    function editBtnDelete(parent: HTMLElement) {
+         // change delete btn to accept btn
+         const acceptBtn = document.createElement('button')
+         acceptBtn.classList.add('lica-btn__accept')
+         parent.replaceWith(acceptBtn)
+    }
+
+}
+
+function createDeleteBtn(parent:HTMLElement,btnObject:BtnObject) {
+    const btnDelete = document.createElement('button')
+    btnDelete.classList.add('lica-btn__delete')
+    parent.appendChild(btnDelete);
+
+    deleteBtnsChange(parent,btnObject)
+    function deleteBtnsChange(parent:HTMLElement,btnObject:BtnObject) {
+        btnDelete.addEventListener('click', (e) => {
             e.stopPropagation()
-            const newButtonAccept = document.createElement('button')
-            newButtonAccept.classList.add('lica-btn__accept')
-            newButtonEdit.replaceWith(newButtonAccept)
-    
-            const newButtonCancel = document.createElement('button')
-            newButtonCancel.classList.add('lica-btn__cancel')
-            newButtonDelete.replaceWith(newButtonCancel)
-    
-            newButtonCancel.addEventListener('click', (e) => {
-                e.stopPropagation()
-                newButtonAccept.replaceWith(newButtonEdit)
-                newButtonCancel.replaceWith(newButtonDelete)
-                newBtnTitleInput.replaceWith(newButtonTitle)
-            })
-            
-            const newBtnTitleInput = document.createElement('input')
-            newBtnTitleInput.classList.add('lica-btn__input')
-            newButtonTitle.replaceWith(newBtnTitleInput)
-    
-            newBtnTitleInput.addEventListener('click', (e) => {
-                e.stopPropagation()
-            })
-    
-            newButtonAccept.addEventListener('click', (e) => {
-                e.stopPropagation()
-                // debugger
-                const inputValue = newBtnTitleInput.value;
-                newButtonTitle.innerText = inputValue;
-                buttonsArray.forEach((item, index) => {
-                    if(item.id === btnObj.id) {
-                        btnObj.title = inputValue;
-                        buttonsArray.splice(index, 1,btnObj)
-                    }
-                })
-                console.log(buttonsArray)   
-                localStorage.setItem('langs', JSON.stringify(buttonsArray))
+            const btnEdit = parent?.querySelector('.lica-btn__edit') as HTMLElement
+            const acceptBtn = document.createElement('button')
+            const cancelBtn = document.createElement('button')
+            acceptBtn.classList.add('lica-btn__accept')
+            cancelBtn.classList.add('lica-btn__cancel')
 
-                newBtnTitleInput.remove();
-                newButtonAccept.replaceWith(newButtonTitle)
-                newButton.appendChild(newButtonAccept)
-                newButtonAccept.replaceWith(newButtonEdit)
-                newButtonCancel.replaceWith(newButtonDelete)
-    
-            })
-        })
-    }
-    newButtonEditLogic(newButton)
+            btnEdit.replaceWith(acceptBtn)
+            btnDelete.replaceWith(cancelBtn)
 
-    // button modal
-    newButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        openModal(btnObj.title, btnObj.id);
-    })
-
-    // parent to append to
-    parentToAppendTo.appendChild(newButton)
-}
-
-
-
-
-
-function renderLangButtons() {
-    buttonsArray.forEach(item => {
-        const btnObj = {
-            id: item.id,
-            title: item.title,
-            categories: item.categories,
-        }
-        createButton(licaBody, btnObj)
-    })
-}
-renderLangButtons()
-
-
-// open modal function
-function openModal(title: string, buttonID: number) {
- 
-
-    console.log(buttonsArray)
-    const categories = document.createElement('div')
-    categories.id = buttonID.toString()
-    categories.classList.add('categories')
-    categories.innerHTML = `
-    <!-- modal-categories -->
-        <div class="categories">
-            <nav class="categories__header">
-                <h2 class="categories__title"></h2>
-                <div class="categories__buttons">
-                    <button class="categories__back"><< Back</button>
-                    <button class="categories__new_category">Add new category</button>
-                    <button class="buttons__spam">SPAM</button>
-                </div>
-                <input type="text" placeholder="Search...">
-            </nav>
-            <div class="categories__body"></div>
-            <footer class="categories__footer">
-                <div class="categories__footer-button">
-                    <h1 class="categories__footer-title">Empty template</h1>
-                    <button class="categories__footer-seetings">Settings</button>
-                </div>
-            </footer>
-        </div>
-
-    `
-    licaBody.appendChild(categories)
-    // variables
-    const categoriesBackBtn = document.querySelector('.categories__back') as HTMLElement;
-    const addNewCatBtn = document.querySelector('.categories__new_category') as HTMLElement;
-    const categoriesTitle = document.querySelector('.categories__title') as HTMLElement;
-    const categoriesBody = document.querySelector('.categories__body') as HTMLElement;
-    categoriesTitle.innerText = title;
-    
-
-
-    // categories.dataset.id = buttonID.toString();
-    categoriesBackBtn.addEventListener('click', (e:MouseEvent) => {
-        addNewCatBtn.removeEventListener('click', addNewCategory)
-        const element = e.target as HTMLElement;
-        element.parentNode?.parentNode?.parentElement?.parentElement?.remove()
-    })
-    
-    // render buttons
-    buttonsArray.forEach(item => {
-        item.categories.forEach(category => {
-            const categoryObj = {
-                id: category.id,
-                languageID: buttonID,
-                title:category.title,
-                templates: category.templates,
-                categories: []
-            }
-            // console.log(categoryObj)
-            // debugger
-            if (item.id === (categoryObj.languageID)) {
-                console.log('hii')
-                createButton(categoriesBody, categoryObj)
-            }
-        })
-    })
-
-    
-
-
-    addNewCatBtn.addEventListener('click', addNewCategory)
-
-    function addNewCategory() {
-        const newButton = document.createElement('div')
-        newButton.classList.add('lica-btn')
-        const newButtonTitle = document.createElement('p')
-        newButtonTitle.classList.add('lica-btn__title')
-        newButtonTitle.innerText = 'New Category'
-        newButton.id = (Date.now()).toString();
-        const newButtonEdit = document.createElement('button')
-        newButtonEdit.classList.add('lica-btn__edit')
-        const newButtonDelete = document.createElement('button')
-        newButtonDelete.classList.add('lica-btn__delete')
-        const categoriesBody = document.querySelector('.categories__body')
-
-        const categoriesObj = {
-            id: Date.now(),
-            languageID: buttonID.toString(),
-            title: newButtonTitle.innerText,
-            templates: [],
-        }
-
-        buttonsArray.forEach(item => {
-            if(item.id === parseInt(categoriesObj.languageID)) {
-                item.categories.push(categoriesObj)
-            }
-        })
-        localStorage.setItem('langs', JSON.stringify(buttonsArray))
-
-            // ================================
-            newButton.appendChild(newButtonTitle)
-            newButton.appendChild(newButtonEdit)
-            newButton.appendChild(newButtonDelete)
-            categoriesBody?.appendChild(newButton)
-
-            newButtonDelete.addEventListener('click', (e: MouseEvent) => {
+            acceptBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const newButtonAccept = document.createElement('button')
-                newButtonAccept.classList.add('lica-btn__accept')
-                newButtonEdit.replaceWith(newButtonAccept)
-        
-                const newButtonCancel = document.createElement('button')
-                newButtonCancel.classList.add('lica-btn__cancel')
-                newButtonDelete.replaceWith(newButtonCancel)
-        
-                newButtonCancel.addEventListener('click', (e: MouseEvent) => {
-                    e.stopPropagation()
-                    newButtonAccept.replaceWith(newButtonEdit)
-                    newButtonCancel.replaceWith(newButtonDelete)
-                })
-                
-                newButtonAccept.addEventListener('click', (e: MouseEvent) => {
-                    e.stopPropagation()
-                    const parentElement = (e.target as HTMLElement).parentElement;
-        
-                    if(parentElement) {
-                        parentElement.remove();
+                buttonsArray.forEach((item,index)  => {
+                    if(item.id === btnObject.id) {
+                        buttonsArray.splice(index,1)
+                        localStorage.setItem('langs', JSON.stringify(buttonsArray))
+                        parent.remove();
                     }
-
-                    buttonsArray.forEach((item,index) => {
-                        if(item.id === parseInt(categoriesObj.languageID)) {
-                             item.categories.splice(index,1)
-                        }
-                    })
-
-                    console.table(buttonsArray)
-                    localStorage.setItem("langs",JSON.stringify(buttonsArray))
-        
-        
                 })
             })
-        
-            newButtonEdit.addEventListener('click', (e) => {
-                e.stopPropagation()
-                const newButtonAccept = document.createElement('button')
-                newButtonAccept.classList.add('lica-btn__accept')
-                newButtonEdit.replaceWith(newButtonAccept)
-        
-                const newButtonCancel = document.createElement('button')
-                newButtonCancel.classList.add('lica-btn__cancel')
-                newButtonDelete.replaceWith(newButtonCancel)
-        
-                newButtonCancel.addEventListener('click', (e) => {
-                    e.stopPropagation()
-                    newButtonAccept.replaceWith(newButtonEdit)
-                    newButtonCancel.replaceWith(newButtonDelete)
-                    newBtnTitleInput.replaceWith(newButtonTitle)
-                })
-                
-                const newBtnTitleInput = document.createElement('input')
-                newBtnTitleInput.classList.add('lica-btn__input')
-                newButtonTitle.replaceWith(newBtnTitleInput)
-        
-                newBtnTitleInput.addEventListener('click', (e) => {
-                    e.stopPropagation()
-                })
-        
-                newButtonAccept.addEventListener('click', (e) => {
-                    e.stopPropagation()
-                    const inputValue = newBtnTitleInput.value;
-                    newButtonTitle.innerText = inputValue;
-                    buttonsArray.forEach(item => {
-                        if(item.id === parseInt(categoriesObj.languageID)) {
-                            categoriesObj.title = inputValue;
-                            localStorage.setItem('langs', JSON.stringify(buttonsArray))
-                        }
-                    })
-                    newBtnTitleInput.remove();
-                    newButtonAccept.replaceWith(newButtonTitle)
-                    newButton.appendChild(newButtonAccept)
-                    newButtonAccept.replaceWith(newButtonEdit)
-                    newButtonCancel.replaceWith(newButtonDelete)
-        
-                })
+            cancelBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                acceptBtn.replaceWith(btnEdit)
+                cancelBtn.replaceWith(btnDelete)
             })
-
+        })
     }
 }
 
-
+// level 2 - categories modal
+function categoriesModal(btnObject: BtnObject) {
+    console.log('hello')
+}
