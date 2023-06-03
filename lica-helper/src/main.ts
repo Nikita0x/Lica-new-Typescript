@@ -24,6 +24,14 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
 
     <section class="lica-body">
+        <div class="lica-btn">
+            <p class="lica-btn__title">Title</p>
+            <button class="lica-btn__edit">
+                <svg width="64px" height="64px" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Edit / Edit_Pencil_Line_02"> <path id="Vector" d="M4 20.0001H20M4 20.0001V16.0001L14.8686 5.13146L14.8704 5.12976C15.2652 4.73488 15.463 4.53709 15.691 4.46301C15.8919 4.39775 16.1082 4.39775 16.3091 4.46301C16.5369 4.53704 16.7345 4.7346 17.1288 5.12892L18.8686 6.86872C19.2646 7.26474 19.4627 7.46284 19.5369 7.69117C19.6022 7.89201 19.6021 8.10835 19.5369 8.3092C19.4628 8.53736 19.265 8.73516 18.8695 9.13061L18.8686 9.13146L8 20.0001L4 20.0001Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g> </g></svg>
+            </button>
+            <button class="lica-btn__delete"></button>
+        </div>
+
     </section>
 
 
@@ -66,7 +74,10 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
 
 //   <section class="lica-body">
-
+//       <div class="lica-btn">
+//           <h3>Title</h3>
+//           <button>Edit</button>
+//       </div>
 //   </section>
 
 
@@ -758,7 +769,7 @@ function categoriesModal(btnObject:BtnObject) {
                 item.categories.forEach(category => {
                     category.templates.forEach(template => {
                         if(template.categoryID === templates.id) {
-                            createTemplate(template, categoryObj, templatesBody)
+                            createButton(categoryObj, template, templatesBody)
                         }
                     })
                 })
@@ -769,7 +780,7 @@ function categoriesModal(btnObject:BtnObject) {
 }
 
 
-// Ласт фикс основной логики - надо пофиксить удаление кнопки после рендера на 3 уровне
+// Логика для добавления 3ьего уровня - рабоатет. Но теперь надо сделать рендер 
 
 
 
