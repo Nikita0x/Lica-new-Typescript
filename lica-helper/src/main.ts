@@ -412,6 +412,7 @@ function categoriesModal(btnObject:BtnObject) {
         localStorage.setItem('langs', JSON.stringify(buttonsArray))
 
         createButton(btnObject, categoryObj, categoriesBody)
+        categoriesBody.innerHTML = ''
 
     })
     function createButton(btnObject:BtnObject, categoryObj:CategoryObj, parent:HTMLElement) {
@@ -534,6 +535,7 @@ function categoriesModal(btnObject:BtnObject) {
         }
 
         newButton.addEventListener('click', () => {
+            categoriesBody.innerHTML = ''
             renderTemplates(categoryObj)
         })
     }
@@ -757,11 +759,33 @@ function categoriesModal(btnObject:BtnObject) {
             })
         }
     }
+
+
+
+
+
+        // render logic for lvl 3
+        renderCategories(categoryObj)
+        function renderCategories(categoryObj:CategoryObj) {
+            buttonsArray.forEach(item => {
+                item.categories.forEach(category => {
+                    category.templates.forEach(template => {
+                        if(template.categoryID === templates.id) {
+                            createButton(categoryObj, template, templatesBody)
+                        }
+                    })
+                    if(category.languageID === categories.id) {
+                        createButton(btnObject, category, categoriesBody)
+                    }
+                })
+            })
+        }
+
 } 
 }
 
 
-// Добавил добавление templates в localStorage. надо сделать - render там же 
+// Логика для добавления 3ьего уровня - рабоатет. Но теперь надо сделать рендер 
 
 
 
