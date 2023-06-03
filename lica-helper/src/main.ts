@@ -323,6 +323,7 @@ function createDeleteBtn(parent:HTMLElement,btnObject:BtnObject) {
 
 
 function categoriesModal(btnObject:BtnObject) {
+
     const categories = document.createElement('div')
     categories.classList.add('categories')
     categories.innerHTML = `
@@ -353,7 +354,9 @@ function categoriesModal(btnObject:BtnObject) {
     const addNewCatBtn = document.querySelector('.categories__new_category') as HTMLElement;
     const categoriesTitle = document.querySelector('.categories__title') as HTMLElement;
     categoriesTitle.innerText = btnObject.title;
+    categories.id = btnObject.id
     const categoriesBody = document.querySelector('.categories__body') as HTMLElement;
+
 
     // back btn
     categoriesBackBtn.addEventListener('click', () => {
@@ -500,7 +503,41 @@ function categoriesModal(btnObject:BtnObject) {
             })
         }
     }
+
+
+    // render logic for lvl 2
+    renderCategories(btnObject)
+    function renderCategories(btnObject:BtnObject) {
+        buttonsArray.forEach(item => {
+            item.categories.forEach(category => {
+                if(category.languageID === categories.id) {
+                    // create main button
+                    const newButton = document.createElement('div')
+                    categoriesBody.appendChild(newButton)
+                    const newButtonTitle = document.createElement('p')
+                    newButtonTitle.classList.add('lica-btn__title')
+                    newButtonTitle.innerText = category.title;
+                    newButton.appendChild(newButtonTitle)
+                    newButton.id = category.id;
+                    newButton.classList.add('lica-btn')
+
+                }
+            })
+        })
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
