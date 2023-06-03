@@ -412,7 +412,6 @@ function categoriesModal(btnObject:BtnObject) {
         localStorage.setItem('langs', JSON.stringify(buttonsArray))
 
         createButton(btnObject, categoryObj, categoriesBody)
-        categoriesBody.innerHTML = ''
 
     })
     function createButton(btnObject:BtnObject, categoryObj:CategoryObj, parent:HTMLElement) {
@@ -535,7 +534,6 @@ function categoriesModal(btnObject:BtnObject) {
         }
 
         newButton.addEventListener('click', () => {
-            categoriesBody.innerHTML = ''
             renderTemplates(categoryObj)
         })
     }
@@ -774,9 +772,6 @@ function categoriesModal(btnObject:BtnObject) {
                             createButton(categoryObj, template, templatesBody)
                         }
                     })
-                    if(category.languageID === categories.id) {
-                        createButton(btnObject, category, categoriesBody)
-                    }
                 })
             })
         }
