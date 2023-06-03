@@ -132,7 +132,9 @@ const licaBody = document.querySelector('.lica-body') as HTMLElement;
 const addNewLanguageBtn = document.querySelector('.buttons__new_language') as  HTMLElement;
 const spamBtn = document.querySelector('.buttons__spam') as HTMLElement;
 
-
+spamBtn.addEventListener('click', () => {
+    console.log(buttonsArray)
+})
 
 
 interface BtnObject {
@@ -474,21 +476,18 @@ function categoriesModal(btnObject:BtnObject) {
                     btnDelete.replaceWith(cancelBtn)
 
                     //accept
-                    acceptBtn.addEventListener('click', (e) => {
-                        // debugger
+                    acceptBtn.addEventListener('click', (e:MouseEvent) => {
                         e.stopPropagation();
+                        const parent = e.currentTarget as HTMLElement;
                         buttonsArray.forEach(item => {
                             item.categories.forEach((category,index) => {
-                                // debugger
-                                if(item.id === category.languageID) {
-                                    item.categories.splice(index,1)
-                                    console.log(buttonsArray)
+                                if(category.id === parent.parentElement.id) {
+                                    item.categories.splice(index, 1)
+                                    parent.parentElement.remove()
                                     localStorage.setItem('langs', JSON.stringify(buttonsArray))
-                                    parent.remove();
                                 }
                             })
                         })
-
                     })
 
                     //cancel
