@@ -502,3 +502,29 @@ function categoriesModal(btnObject:BtnObject) {
     }
 }
 
+
+
+// render language buttons - lvl 1
+renderLanguages(licaBody)
+function renderLanguages(parent:HTMLElement) {
+    buttonsArray.forEach(item => {
+        // create main button
+        const newButton = document.createElement('div')
+        parent.appendChild(newButton)
+        const newButtonTitle = document.createElement('p')
+        newButtonTitle.classList.add('lica-btn__title')
+        newButtonTitle.innerText = item.title;
+        newButton.appendChild(newButtonTitle)
+        newButton.id = item.id;
+        newButton.classList.add('lica-btn')
+
+        createEditBtn(newButton, item)
+        createDeleteBtn(newButton, item)
+
+                //Level 2
+                newButton.addEventListener('click', () => {
+                    categoriesModal(item)
+                })
+    })
+
+}
