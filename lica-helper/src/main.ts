@@ -307,6 +307,30 @@ function createDeleteBtn(parent:HTMLElement,btnObject:BtnObject) {
 
 
 
+// render language buttons - lvl 1
+renderLanguages(licaBody)
+function renderLanguages(parent:HTMLElement) {
+    buttonsArray.forEach(item => {
+        // create main button
+        const newButton = document.createElement('div')
+        parent.appendChild(newButton)
+        const newButtonTitle = document.createElement('p')
+        newButtonTitle.classList.add('lica-btn__title')
+        newButtonTitle.innerText = item.title;
+        newButton.appendChild(newButtonTitle)
+        newButton.id = item.id;
+        newButton.classList.add('lica-btn')
+
+        createEditBtn(newButton, item)
+        createDeleteBtn(newButton, item)
+
+                //Level 2
+                newButton.addEventListener('click', () => {
+                    categoriesModal(item)
+                })
+    })
+
+}
 
 
 
@@ -342,7 +366,7 @@ function categoriesModal(btnObject:BtnObject) {
             <footer class="categories__footer">
                 <div class="categories__footer-button">
                     <h1 class="categories__footer-title">Empty template</h1>
-                    <button class="categories__footer-seetings">Settings</button>
+                    <button class="categories__footer-settings">Settings</button>
                 </div>
             </footer>
         </div>
@@ -502,6 +526,10 @@ function categoriesModal(btnObject:BtnObject) {
                 }
             })
         }
+
+        newButton.addEventListener('click', () => {
+            renderTemplates(categoryObj)
+        })
     }
 
 
@@ -516,7 +544,6 @@ function categoriesModal(btnObject:BtnObject) {
             })
         })
     }
-}
 
 
 
@@ -531,28 +558,69 @@ function categoriesModal(btnObject:BtnObject) {
 
 
 
+    //render templates for categories - lvl 3
+    function renderTemplates(categoryObj:CategoryObj) {
+    
+    const templates = document.createElement('div')
+    templates.classList.add('templates')
+    templates.innerHTML = `
+    <!-- modal-templates -->
+        <div class="templates">
+            <nav class="templates__header">
+                <h2 class="templates__title"></h2>
+                <div class="templates__buttons">
+                    <button class="templates__back"><< Back</button>
+                    <button class="templates__new_template">Add new template</button>
+                    <button class="buttons__spam">SPAM</button>
+                </div>
+                <input type="text" placeholder="Search...">
+            </nav>
+            <div class="templates__body"></div>
+            <footer class="templates__footer">
+                <div class="templates__footer-button">
+                    <h1 class="templates__footer-title">Empty template</h1>
+                    <button class="templates__footer-settings">Settings</button>
+                </div>
+            </footer>
+        </div>
 
-// render language buttons - lvl 1
-renderLanguages(licaBody)
-function renderLanguages(parent:HTMLElement) {
-    buttonsArray.forEach(item => {
-        // create main button
-        const newButton = document.createElement('div')
-        parent.appendChild(newButton)
-        const newButtonTitle = document.createElement('p')
-        newButtonTitle.classList.add('lica-btn__title')
-        newButtonTitle.innerText = item.title;
-        newButton.appendChild(newButtonTitle)
-        newButton.id = item.id;
-        newButton.classList.add('lica-btn')
+    `
+    categoriesBody.appendChild(templates)
 
-        createEditBtn(newButton, item)
-        createDeleteBtn(newButton, item)
+    const templatesBackBtn = document.querySelector('.templates__back') as HTMLElement;
+    const addNewTemplateBtn = document.querySelector('.templates__new_template') as HTMLElement;
+    const templatesTitle = document.querySelector('.templates__title') as HTMLElement;
+    templatesTitle.innerText = categoryObj.title;
+    templates.id = categoryObj.id
+    const templatesBody = document.querySelector('.templates__body') as HTMLElement;
 
-                //Level 2
-                newButton.addEventListener('click', () => {
-                    categoriesModal(item)
-                })
+
+    // back btn
+    templatesBackBtn.addEventListener('click', () => {
+        templates.remove();
     })
 
+} 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

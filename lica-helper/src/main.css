@@ -205,6 +205,55 @@ outline: 2px solid #715fde;
 }
 
 
+/*======================== modal- templates */
+.templates {
+  position: absolute;
+  top: 0;
+  left:0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  background-color: #2d2d2d;
+}
+.templates__header {
+  position: relative;
+  top: 0;
+  height: 20%;
+  background-color: rgb(62, 194, 157);
+}
+.templates__title {
+  text-align: center;
+  font-weight: 100;
+  color: var(--text-color);
+}
+.templates__buttons {
+  display: flex;
+
+}
+
+.templates__body {
+  display: grid;
+  height: 70%;
+  min-height: 200px;
+  max-height: 400px;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(auto-fill, 70px);
+  gap: 4px;
+  overflow-y: scroll;
+  padding: 5px 0;
+}
+.templates__footer {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  bottom: 0;
+  height: 10%;
+  color: var(--text-color);
+  background-color: rgb(62, 194, 157);
+}
+
+
+
 .footer {
   display: flex;
   justify-content: center;
