@@ -148,6 +148,12 @@ interface CategoryObj {
     templates: [],
     languageID: string,
 }
+interface TemplateObj {
+    id: string,
+    title: string,
+    text: string,
+    categoryID: string,
+}
 
 // Add new language - listener
 addNewLanguageBtn.addEventListener('click', () => {
@@ -600,6 +606,32 @@ function categoriesModal(btnObject:BtnObject) {
         templates.remove();
     })
 
+        // add new template buttons
+        addNewTemplateBtn.addEventListener('click', (e) => {
+            const templateObj: TemplateObj = {
+                id: (Date.now()).toString(),
+                title: 'New Template',
+                categoryID: (categoryObj.id).toString(),
+                text: `Ваш шаблон / Your template goes here`
+            }
+            const parent = e.target as HTMLElement;
+            const templateModal = parent.parentElement?.parentElement?.parentElement;
+            // debugger
+
+            buttonsArray.forEach(item => {
+                item.categories.forEach(category => {
+                    if(category.id === templateObj.categoryID) {
+                        category.templates.push(templateObj)
+                        localStorage.setItem('langs', JSON.stringify(buttonsArray))
+                        console.log(buttonsArray)
+                    }
+                })
+            })
+            
+            // console.log(templateObj)
+            // console.log(buttonsArray)
+            // console.log(templateModal)
+        })
 } 
 }
 
