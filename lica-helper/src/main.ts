@@ -397,8 +397,8 @@ function categoriesModal(btnObject:BtnObject) {
 
 
         // create edit btn
-        createEditBtn(btnObject,categoryObj,newButton)
-        function createEditBtn(btnObject:BtnObject, categoryObj:CategoryObj, parent:HTMLElement) {
+        createEditBtnCategories(btnObject,categoryObj,newButton)
+        function createEditBtnCategories(btnObject:BtnObject, categoryObj:CategoryObj, parent:HTMLElement) {
             const editBtn = document.createElement('button')
             editBtn.classList.add('lica-btn__edit')
             parent.appendChild(editBtn)
@@ -454,8 +454,8 @@ function categoriesModal(btnObject:BtnObject) {
             })
         }
         // create delete btn
-        createDeleteBtn(btnObject,categoryObj,newButton)
-        function createDeleteBtn(btnObject:BtnObject, categoryObj:CategoryObj, parent:HTMLElement) {
+        createDeleteBtnCategories(btnObject,categoryObj,newButton)
+        function createDeleteBtnCategories(btnObject:BtnObject, categoryObj:CategoryObj, parent:HTMLElement) {
             const deleteBtn = document.createElement('button')
             deleteBtn.classList.add('lica-btn__delete')
             parent.appendChild(deleteBtn) 
@@ -511,16 +511,7 @@ function categoriesModal(btnObject:BtnObject) {
         buttonsArray.forEach(item => {
             item.categories.forEach(category => {
                 if(category.languageID === categories.id) {
-                    // create main button
-                    const newButton = document.createElement('div')
-                    categoriesBody.appendChild(newButton)
-                    const newButtonTitle = document.createElement('p')
-                    newButtonTitle.classList.add('lica-btn__title')
-                    newButtonTitle.innerText = category.title;
-                    newButton.appendChild(newButtonTitle)
-                    newButton.id = category.id;
-                    newButton.classList.add('lica-btn')
-
+                    createButton(btnObject, category, categoriesBody)
                 }
             })
         })
