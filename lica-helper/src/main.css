@@ -252,7 +252,40 @@ outline: 2px solid #715fde;
   background-color: rgb(62, 194, 157);
 }
 
+/* brand */
+.brand {
+  position: absolute;
+  top: 10px;
+  left: 580px;
+}
 
+/* test area textarea */
+
+.cke_source.cke_reset.cke_enable_context_menu.cke_editable.cke_editable_themed.cke_contents_ltr {
+  position: absolute;
+  top: 50px;
+  left: 420px;
+}
+
+/* Modal template */
+.modalTemplate {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(128, 128, 128, 0.396);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+.modalContent {
+  position: relative;
+  width: 1000px;
+  height: 400px;
+  background-color: rgb(92, 186, 181);
+}
 
 .footer {
   display: flex;

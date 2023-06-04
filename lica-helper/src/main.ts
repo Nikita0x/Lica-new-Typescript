@@ -35,6 +35,13 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     </section>
 
 
+    <h1 class="brand">Google</h1>
+
+
+    <textarea class='cke_source cke_reset cke_enable_context_menu cke_editable cke_editable_themed cke_contents_ltr' name="" id="testArea" cols="50" rows="20"></textarea>
+
+
+
     <footer class="footer">
         <div class="footer__button">
             <h1 class="footer__title">Empty template</h1>
@@ -128,9 +135,13 @@ let buttonsArray = JSON.parse(localStorage.getItem('langs') || '[]')
 console.log(`buttonsArray:`, buttonsArray)
 // ======================
 
+const licaWrapper = document.querySelector('#app') as HTMLElement;
 const licaBody = document.querySelector('.lica-body') as HTMLElement;
 const addNewLanguageBtn = document.querySelector('.buttons__new_language') as  HTMLElement;
 const spamBtn = document.querySelector('.buttons__spam') as HTMLElement;
+const brand = document.querySelector('.brand')
+const textArea = document.querySelector(".cke_source.cke_reset.cke_enable_context_menu.cke_editable.cke_editable_themed.cke_contents_ltr") as HTMLTextAreaElement
+
 
 spamBtn.addEventListener('click', () => {
     console.log(buttonsArray)
@@ -635,7 +646,7 @@ function renderLanguages(parent:HTMLElement) {
             newButton.id = templateObj.id;
             newButton.classList.add('lica-btn')
 
-            // create edit btn
+            //open modal for templates
             createEditBtnTemplate(templateObj,categoryObj,newButton)
             function createEditBtnTemplate(templateObj: TemplateObj, categoryObj:CategoryObj, parent: HTMLElement) {
                 const editBtn = document.createElement('button')
@@ -644,54 +655,63 @@ function renderLanguages(parent:HTMLElement) {
 
                 editBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
+                    
+                    const modal = document.createElement('div')
+                    modal.id = templateObj.id;
+                    modal.classList.add('modalTemplate')
+                    licaWrapper.appendChild(modal)
+                    modal.innerHTML = `
+                    <div class='modalTemplate'>
+                        <div class='modalContent'>
+                            <div class='modalNav'>
+                                <input class='modalTemplateName'>
+                                <button class='modalSave'>Save</button>
+                                <button class='modalCancel'>Cancel</button>
+                            </div>
+                                
+                            <div class='modalBody'>
+                                <textarea class='modalText' cols="50" rows="20"></textarea> 
+                            </div>
+                        </div>
+                    </div>
+                    `
+                    //modal variables
+                    const modalTemplateName = document.querySelector('.modalTemplateName') as HTMLInputElement
+                    const modalSave = document.querySelector('.modalSave') as HTMLElement
+                    const modalCancel = document.querySelector('.modalCancel') as HTMLElement
+                    const modalText = document.querySelector('.modalText') as HTMLTextAreaElement;
+                    // cancel button
+                    modalCancel.addEventListener('click', () => {
+                        modal.remove();
+                    })
 
-                    // change title to input, and add accept and cancel buttons
-                    buttonsChange(templateObj,categoryObj,newButton)
-                    function buttonsChange(templateObj: TemplateObj, categoryObj:CategoryObj, parent:HTMLElement){
-                        const btnEdit = parent.querySelector('.lica-btn__edit') as HTMLElement
-                        const btnDelete = parent.querySelector('.lica-btn__delete') as HTMLElement
-                        const btnTitle = parent.querySelector('.lica-btn__title') as HTMLElement
+                    // save button
+                    modalSave.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        templateObj.title = modalTemplateName.value;
+                        templateObj.text = modalText.value;
+                        newButtonTitle.innerText = modalTemplateName.value; 
+                        console.log(templateObj)
+                        localStorage.setItem('langs', JSON.stringify(buttonsArray))
+                        console.log(buttonsArray)
+                    })
 
-                        const input = document.createElement('input')
-                        input.classList.add('lica-btn__input')
-                        btnTitle.replaceWith(input)
+                    // render saved template name/text on open of modal
+                    buttonsArray.forEach(item => {
+                        item.categories.forEach(category => {
+                            category.templates.forEach(template => {
+                                debugger
+                                if(template.id === modal.id) {
+                                    modalTemplateName.value = templateObj.title;
+                                    modalText.value = templateObj.text;
 
-                        const acceptBtn = document.createElement('button')
-                        acceptBtn.classList.add('lica-btn__accept')
-                        btnEdit.replaceWith(acceptBtn)
-
-                        const cancelBtn = document.createElement('button')
-                        cancelBtn.classList.add('lica-btn__cancel')
-                        btnDelete.replaceWith(cancelBtn)
-
-                        //input
-                        input.addEventListener('click', (e) => {
-                            e.stopPropagation()
+                                }
+                            })
                         })
-
-                        //accept
-                        acceptBtn.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            templateObj.title = input.value;
-                            newButtonTitle.innerText = input.value; 
-                            localStorage.setItem('langs', JSON.stringify(buttonsArray))
-                            console.log(buttonsArray)
-
-                            input.replaceWith(btnTitle)
-                            acceptBtn.replaceWith(btnEdit)
-                            cancelBtn.replaceWith(btnDelete)
-                        })
-
-                        // cancel 
-                        cancelBtn.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            input.replaceWith(btnTitle)
-                            acceptBtn.replaceWith(btnEdit)
-                            cancelBtn.replaceWith(btnDelete)
-                        })
-                    }
+                    })
                 })
             }
+
 
             // create delete btn
             createDeleteBtnCategories(templateObj,categoryObj,newButton)
@@ -750,27 +770,59 @@ function renderLanguages(parent:HTMLElement) {
                 })
             }
 
+
+
+            // insert text in textarea when template is clicked;
+            newButton.addEventListener('click', () => {
+                textArea.value = templateObj.text;
+            })
+
         }
 
-              // render templates for categories - lvl 3
-              renderTemplates(categoryObj, templatesBody);
-
-                  // render templates for categories - lvl 3
-                function renderTemplates(categoryObj: CategoryObj, parent: HTMLElement) {
-                    const category = buttonsArray
-                    .flatMap((item) => item.categories)
-                    .find((category) => category.id === categoryObj.id);
-                
-                    if (category) {
-                    category.templates.forEach((template) => {
-                        createTemplate(template, categoryObj, parent);
-                    });
-                    }
-                }
+        // render templates for categories - lvl 3
+        renderTemplates(categoryObj, templatesBody);
+        function renderTemplates(categoryObj: CategoryObj, parent: HTMLElement) {
+            const category = buttonsArray
+            .flatMap((item) => item.categories)
+            .find((category) => category.id === categoryObj.id);
+        
+            if (category) {
+            category.templates.forEach((template) => {
+                createTemplate(template, categoryObj, parent);
+            });
+            }
+        }
         } 
 
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
