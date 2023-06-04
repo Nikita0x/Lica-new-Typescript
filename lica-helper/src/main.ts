@@ -694,6 +694,14 @@ function renderLanguages(parent:HTMLElement) {
                         console.log(templateObj)
                         localStorage.setItem('langs', JSON.stringify(buttonsArray))
                         console.log(buttonsArray)
+
+                        modalTemplateName.value = 'Saved!'
+                        modalText.value = 'Saved!'
+
+                        setTimeout(() => {
+                            modalTemplateName.value = templateObj.title;
+                            modalText.value = templateObj.text;  
+                        }, 600);
                     })
 
                     // render saved template name/text on open of modal
