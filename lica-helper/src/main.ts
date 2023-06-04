@@ -700,7 +700,6 @@ function renderLanguages(parent:HTMLElement) {
                     buttonsArray.forEach(item => {
                         item.categories.forEach(category => {
                             category.templates.forEach(template => {
-                                debugger
                                 if(template.id === modal.id) {
                                     modalTemplateName.value = templateObj.title;
                                     modalText.value = templateObj.text;
